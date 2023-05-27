@@ -40,7 +40,7 @@ public class Product {
     private String specification;
     
     @Column(name = "calculation_unit")
-    private Integer calculationUnit;
+    private String calculationUnit;
     
     @Column(name = "discount")
     private Integer discount;
@@ -50,6 +50,9 @@ public class Product {
     
     @Column(name = "quantity")
     private Integer quantity;
+    
+    @Column(name = "image")
+    private String image;
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)

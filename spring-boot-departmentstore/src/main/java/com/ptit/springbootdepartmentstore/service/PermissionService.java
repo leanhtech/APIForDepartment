@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ptit.springbootdepartmentstore.dto.PermissionDTO;
 import com.ptit.springbootdepartmentstore.entity.Permission;
+import com.ptit.springbootdepartmentstore.mapper.PermissionMapper;
 import com.ptit.springbootdepartmentstore.repository.PermissionRepository;
 
 @Service
@@ -19,44 +20,47 @@ public class PermissionService {
 
 	@Autowired
 	private PermissionRepository permissionRepository;
+	
+	@Autowired
+	private PermissionMapper permissionMapper;
 
-	public PermissionDTO convertToPermissionDTO(Permission permission) {
-		PermissionDTO permissionDTO = new PermissionDTO();
-		permissionDTO.setId(permission.getId());
-		permissionDTO.setPermissionName(permission.getName());
-		return permissionDTO;
-	}
-
-	public PermissionDTO convertToListPermissionDTO(Permission permission) {
-		PermissionDTO permissionDTO = new PermissionDTO();
-		permissionDTO.setId(permission.getId());
-		permissionDTO.setPermissionName(permission.getName());
-		return permissionDTO;
-	}
-
-	public List<PermissionDTO> convertToLisPermissionDTO(List<Permission> permissions) {
-		return permissions.stream().map(this::convertToPermissionDTO).collect(Collectors.toList());
-	}
-
-	public Permission convertToPermission(PermissionDTO permissionDTO) {
-		Permission permission = new Permission();
-		permission.setName(permissionDTO.getPermissionName());
-		return permission;
-	}
+//	public PermissionDTO convertToPermissionDTO(Permission permission) {
+//		PermissionDTO permissionDTO = new PermissionDTO();
+//		permissionDTO.setId(permission.getId());
+//		permissionDTO.setPermissionName(permission.getName());
+//		return permissionDTO;
+//	}
+//
+//	public PermissionDTO convertToListPermissionDTO(Permission permission) {
+//		PermissionDTO permissionDTO = new PermissionDTO();
+//		permissionDTO.setId(permission.getId());
+//		permissionDTO.setPermissionName(permission.getName());
+//		return permissionDTO;
+//	}
+//
+//	public List<PermissionDTO> convertToLisPermissionDTO(List<Permission> permissions) {
+//		return permissions.stream().map(this::convertToPermissionDTO).collect(Collectors.toList());
+//	}
+//
+//	public Permission convertToPermission(PermissionDTO permissionDTO) {
+//		Permission permission = new Permission();
+//		permission.setName(permissionDTO.getPermissionName());
+//		return permission;
+//	}
 
 	public PermissionDTO getPermission(int id) {
 		Permission permission = permissionRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Permission not found"));
-		return convertToPermissionDTO(permission);
+		return permissionMapper.toDTO(permission);
 	}
 
 	public List<PermissionDTO> getListPermission() {
-		return convertToLisPermissionDTO(permissionRepository.findAll());
+		return permissionMapper.toListDTO(permissionRepository.findAll());
 	}
 
 	@Transactional(rollbackOn = Exception.class)
 	public void savePermission(PermissionDTO permissionDTO) {
-		Permission permission = convertToPermission(permissionDTO);
+		Permission permission = permissionMapper.toEntity(permissionDTO);
 		permissionRepository.save(permission);
 	}
 

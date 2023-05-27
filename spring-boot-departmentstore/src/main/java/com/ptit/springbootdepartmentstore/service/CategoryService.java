@@ -1,7 +1,6 @@
 package com.ptit.springbootdepartmentstore.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ptit.springbootdepartmentstore.dto.CategoryDTO;
 import com.ptit.springbootdepartmentstore.entity.Category;
+import com.ptit.springbootdepartmentstore.mapper.CategoryMapper;
 import com.ptit.springbootdepartmentstore.repository.CategoryRepository;
 
 @Service
@@ -21,33 +21,22 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	public CategoryDTO convertToCategoryDTO(Category category) {
-		return new CategoryDTO(category.getId(), category.getName(), category.getImage());
-	}
-
-	public List<CategoryDTO> convertToListCategoryDTO(List<Category> categories) {
-		return categories.stream().map(this::convertToCategoryDTO).collect(Collectors.toList());
-	}
-
-	public Category convertToCategory(CategoryDTO categoryDTO) {
-		Category category = new Category();
-		category.setName(categoryDTO.getName());
-		return category;
-	}
+	@Autowired
+	private CategoryMapper categoryMapper;
 
 	public CategoryDTO getCategory(int id) {
 		Category category = categoryRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Category not found"));
-		return convertToCategoryDTO(category);
+		return categoryMapper.toDTO(category);
 	}
 
 	public List<CategoryDTO> getCategoryList() {
-		return convertToListCategoryDTO(categoryRepository.findAll());
+		return categoryMapper.toListDTO(categoryRepository.findAll());
 	}
 
 	@Transactional(rollbackOn = Exception.class)
 	public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
-		Category category = convertToCategory(categoryDTO);
+		Category category = categoryMapper.toEntity(categoryDTO);
 		categoryRepository.save(category);
 		return categoryDTO;
 	}

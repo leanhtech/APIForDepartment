@@ -1,5 +1,7 @@
 package com.ptit.springbootdepartmentstore.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +31,17 @@ public class AddressController {
 		}
 		return ResponseEntity.ok(addressDTO);
 	}
+	
+	@GetMapping
+	public ResponseEntity<List<AddressDTO>> getAllAddress() {
+		List<AddressDTO> list = addressService.getAllAddress();
+		return ResponseEntity.ok(list);
+	}
 
 	@PostMapping
 	public ResponseEntity<AddressDTO> saveAddress(@RequestBody AddressDTO addressDTO) {
-		addressService.saveAddress(addressDTO);
-		return ResponseEntity.ok(addressDTO);
+		AddressDTO saved = addressService.saveAddress(addressDTO);
+		return ResponseEntity.ok(saved);
 	}
 
 	@PutMapping("/{id}")

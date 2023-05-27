@@ -23,15 +23,17 @@ public class ProductDTO {
 
 	private String specification;
 
-	private Integer calculationUnit;
+	private String calculationUnit;
 
 	private Integer discount;
 
 	private Integer sold;
 
 	private Integer quantity;
+	
+	private String image;
 
-	private BrandDTO brand;
+	private int brandId;
 
-	private CategoryDTO category;
+	private int categoryId;
 }

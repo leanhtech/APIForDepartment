@@ -39,8 +39,9 @@ public class ProductService {
 		return new ProductDTO(product.getId(), product.getProductDescription(), product.getProductName(),
 				product.getStatus(), product.getPrice(), product.getSpecification(), product.getCalculationUnit(),
 				product.getDiscount(), product.getSold(), product.getQuantity(),
-				brandService.getBrand(product.getBrand().getId()),
-				categoryService.getCategory(product.getCategory().getId()));
+				product.getImage(),
+				product.getBrand().getId(),
+				product.getCategory().getId());
 	}
 
 	public List<ProductDTO> convertToListProductDTO(List<Product> products) {
@@ -58,9 +59,10 @@ public class ProductService {
 		product.setDiscount(productDTO.getDiscount());
 		product.setSold(productDTO.getSold());
 		product.setQuantity(productDTO.getQuantity());
-		product.setBrand(brandRepository.findById(productDTO.getBrand().getId())
+		product.setImage(productDTO.getImage());
+		product.setBrand(brandRepository.findById(productDTO.getBrandId())
 				.orElseThrow(() -> new EntityNotFoundException("Brand not found")));
-		product.setCategory(categoryRepository.findById(productDTO.getCategory().getId())
+		product.setCategory(categoryRepository.findById(productDTO.getCategoryId())
 				.orElseThrow(() -> new EntityNotFoundException("Category not found")));
 		return product;
 	}
@@ -77,6 +79,10 @@ public class ProductService {
 
 	@Transactional(rollbackOn = Exception.class)
 	public ProductDTO createProduct(ProductDTO productDTO) {
+		productDTO.setId(null);
+		if (productDTO.getImage() == "") {
+			productDTO.setImage("https://w7.pngwing.com/pngs/470/493/png-transparent-new-product-development-sales-industry-business-new-product-text-label-service.png");
+		}
 		Product product = convertToProduct(productDTO);
 		Product savedProduct = productRepository.save(product);
 		return convertToProductDTO(savedProduct);
@@ -86,19 +92,30 @@ public class ProductService {
 	public ProductDTO updateProduct(ProductDTO productDTO) {
 		Product product = productRepository.findById(productDTO.getId())
 				.orElseThrow(() -> new EntityNotFoundException("Product not found"));
-		product = convertToProduct(productDTO);
+		product.setProductDescription(productDTO.getProductDescription());
+		product.setProductName(productDTO.getProductName());
+		product.setStatus(productDTO.getStatus());
+		product.setPrice(productDTO.getPrice());
+		product.setSpecification(productDTO.getSpecification());
+		product.setCalculationUnit(productDTO.getCalculationUnit());
+		product.setDiscount(productDTO.getDiscount());
+		product.setSold(productDTO.getSold());
+		product.setQuantity(productDTO.getQuantity());
+		product.setImage(productDTO.getImage());
+		product.setBrand(brandRepository.findById(productDTO.getBrandId())
+				.orElseThrow(() -> new EntityNotFoundException("Brand not found")));
+		product.setCategory(categoryRepository.findById(productDTO.getCategoryId())
+				.orElseThrow(() -> new EntityNotFoundException("Category not found")));
 		Product savedProduct = productRepository.save(product);
 		return convertToProductDTO(savedProduct);
 	}
-// @Transactional(rollbackOn = Exception.class)
-// public void deleteProduct(int id) {
-// Product product = productRepository.findById(id)
-// .orElseThrow(() -> new EntityNotFoundException("Product not found"));
-// if (!product.getOrderDetails().isEmpty()) {
-// throw new RuntimeException("Product has orders and cannot be deleted");
-// }
-// productRepository.delete(product);
-// }
+
+	@Transactional(rollbackOn = Exception.class)
+	public void deleteProduct(int id) {
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found"));
+		productRepository.delete(product);
+	}
 
 
 	public List<ProductDTO> getProductListInBrand(int id) {

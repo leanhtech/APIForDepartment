@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ptit.springbootdepartmentstore.dto.AddressDTO;
 import com.ptit.springbootdepartmentstore.entity.Address;
-import com.ptit.springbootdepartmentstore.entity.User;
+import com.ptit.springbootdepartmentstore.mapper.AddressMapper;
 import com.ptit.springbootdepartmentstore.repository.AddressRepository;
 import com.ptit.springbootdepartmentstore.repository.UserRepository;
 
@@ -24,40 +24,32 @@ public class AddressService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private AddressMapper addressMapper;
+
 	public List<String> getListTextAddress(List<AddressDTO> addressDTOs) {
 		return addressDTOs.stream()
 				.map(addressDTO -> addressDTO.getAddressSpecific() + " " + addressDTO.getAddressGeneral())
 				.collect(Collectors.toList());
 	}
 
-	public AddressDTO convertToAddressDTO(Address address) {
-		return new AddressDTO(address.getId(), address.getAddressGeneral(), address.getAddressSpecific(),
-				address.getUser().getId());
+	public List<Address> getListAddress(List<Integer> ids) {
+		return addressRepository.findAllById(ids);
+	}
+	
+	public List<AddressDTO> getAllAddress() {
+		return addressMapper.toListDTO(addressRepository.findAll());
 	}
 
-	public List<AddressDTO> convertToListAddressDTO(List<Address> addresses) {
-		return addresses.stream().map(this::convertToAddressDTO).collect(Collectors.toList());
-	}
-
-	public Address convertToAddress(AddressDTO addressDTO) {
-		User user = userRepository.findById(addressDTO.getUserId())
-				.orElseThrow(() -> new EntityNotFoundException("Address not found"));
-		Address address = new Address();
-		address.setAddressGeneral(addressDTO.getAddressGeneral());
-		address.setAddressSpecific(addressDTO.getAddressSpecific());
-		address.setUser(user);
-		return address;
-	}
-
-	public List<Address> convertToListAddress(List<AddressDTO> addressDTOs) {
-		return addressDTOs.stream().map(this::convertToAddress).collect(Collectors.toList());
+	public Address getAddressEntity(int id) {
+		return addressRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Address not found"));
 	}
 
 	@Transactional(rollbackOn = Exception.class)
 	public AddressDTO saveAddress(AddressDTO addressDTO) {
-		Address address = convertToAddress(addressDTO);
-		addressRepository.save(address);
-		return convertToAddressDTO(address);
+		Address address = addressMapper.toEntity(addressDTO);
+		Address savedAddress = addressRepository.save(address);
+		return addressMapper.toDTO(savedAddress);
 	}
 
 	@Transactional(rollbackOn = Exception.class)
@@ -68,8 +60,8 @@ public class AddressService {
 		address.setAddressSpecific(addressDTO.getAddressSpecific());
 		address.setUser(userRepository.findById(addressDTO.getUserId())
 				.orElseThrow(() -> new EntityNotFoundException("User not found")));
-		addressRepository.save(address);
-		return convertToAddressDTO(address);
+		Address updatedAddress = addressRepository.save(address);
+		return addressMapper.toDTO(updatedAddress);
 	}
 
 	@Transactional(rollbackOn = Exception.class)
@@ -82,6 +74,6 @@ public class AddressService {
 	public AddressDTO getAddress(int id) {
 		Address address = addressRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Address not found"));
-		return convertToAddressDTO(address);
+		return addressMapper.toDTO(address);
 	}
 }

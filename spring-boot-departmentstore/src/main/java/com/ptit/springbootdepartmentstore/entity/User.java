@@ -3,12 +3,14 @@ package com.ptit.springbootdepartmentstore.entity;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -23,7 +25,7 @@ public class User {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "name", nullable = false, unique = true)
+	@Column(name = "user_name", nullable = false)
 	private String name;
 
 	@Column(name = "password", nullable = false)
@@ -34,9 +36,6 @@ public class User {
 
 	@Column(name = "last_name")
 	private String lastName;
-
-	@Column(name = "image")
-	private String image;
 
 	@Column(name = "email")
 	private String email;
@@ -50,10 +49,14 @@ public class User {
 	@Column(name = "status")
 	private String status;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addressList;
 
 	@ManyToOne
 	@JoinColumn(name = "permission_id", nullable = false)
 	private Permission permission;
+	
+	@Column(name = "avatar")
+	@Lob
+    private byte[] avatar;
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ptit.springbootdepartmentstore.dto.BrandDTO;
 import com.ptit.springbootdepartmentstore.entity.Brand;
+import com.ptit.springbootdepartmentstore.mapper.BrandMapper;
 import com.ptit.springbootdepartmentstore.repository.BrandRepository;
 
 @Service
@@ -18,34 +19,37 @@ public class BrandService {
 
 	@Autowired
 	private BrandRepository brandRepository;
+	
+	@Autowired
+	private BrandMapper brandMapper;
 
-	public BrandDTO convertToBrandDTO(Brand brand) {
-		return new BrandDTO(brand.getId(), brand.getName(), brand.getDescipttion());
-	}
-
-	public List<BrandDTO> convertToListBrandDTO(List<Brand> brands) {
-		return brands.stream().map(this::convertToBrandDTO).collect(Collectors.toList());
-	}
-
-	public Brand convertToBrand(BrandDTO brandDTO) {
-		Brand brand = new Brand();
-		brand.setName(brandDTO.getName());
-		brand.setDescipttion(brandDTO.getDescipttion());
-		return brand;
-	}
+//	public BrandDTO convertToBrandDTO(Brand brand) {
+//		return new BrandDTO(brand.getId(), brand.getName(), brand.getDescipttion());
+//	}
+//
+//	public List<BrandDTO> convertToListBrandDTO(List<Brand> brands) {
+//		return brands.stream().map(this::convertToBrandDTO).collect(Collectors.toList());
+//	}
+//
+//	public Brand convertToBrand(BrandDTO brandDTO) {
+//		Brand brand = new Brand();
+//		brand.setName(brandDTO.getName());
+//		brand.setDescipttion(brandDTO.getDescipttion());
+//		return brand;
+//	}
 
 	public List<BrandDTO> getBrandList() {
-		return convertToListBrandDTO(brandRepository.findAll());
+		return brandMapper.toListDTO(brandRepository.findAll());
 	}
 
 	public BrandDTO getBrand(int id) {
 		Brand brand = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Brand not found"));
-		return convertToBrandDTO(brand);
+		return brandMapper.toDTO(brand);
 	}
 
 	@Transactional(rollbackOn = Exception.class)
 	public void saveBrand(BrandDTO brandDTO) {
-		Brand brand = convertToBrand(brandDTO);
+		Brand brand = brandMapper.toEntity(brandDTO);
 		brandRepository.save(brand);
 	}
 
@@ -56,6 +60,6 @@ public class BrandService {
 		brand.setName(brandDTO.getName());
 		brand.setDescipttion(brandDTO.getDescipttion());
 		brandRepository.save(brand);
-		return convertToBrandDTO(brand);
+		return brandMapper.toDTO(brand);
 	}
 }

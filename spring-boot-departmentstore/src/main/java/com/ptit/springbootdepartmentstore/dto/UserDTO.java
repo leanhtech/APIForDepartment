@@ -5,22 +5,24 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 
 	private Integer id;
 
-	private String name;
+	private String userName;
 
 	private String password;
 
 	private String firstName;
 
 	private String lastName;
-
-	private String image;
+	
+	private byte[] avatar;
 
 	private String email;
 
@@ -30,7 +32,7 @@ public class UserDTO {
 
 	private String status;
 
-	private List<AddressDTO> addressList;
+	private List<Integer> addressIds;
 
-	private PermissionDTO permission;
+	private Integer permissionId;
 }
