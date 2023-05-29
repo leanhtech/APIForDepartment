@@ -25,6 +25,11 @@ public class CartController {
 	public List<CartDTO> getAllCarts() {
 		return cartService.getAllCarts();
 	}
+	
+	@GetMapping("/{userId}")
+	public List<CartDTO> getAllByUser(@PathVariable Integer userId) {
+		return cartService.getAllByIdUser(userId);
+	}
 
 	@GetMapping("/{userId}/{productId}")
 	public CartDTO getCartByUserIdAndProductId(@PathVariable Integer userId, @PathVariable Integer productId) {

@@ -15,22 +15,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ptit.springbootdepartmentstore.dto.OrderDTO;
-import com.ptit.springbootdepartmentstore.mapper.OrderMapper;
 import com.ptit.springbootdepartmentstore.service.OrderService;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("orders")
 public class OrderController {
 
 	@Autowired
 	private OrderService ordersService;
 
-	@Autowired
-	private OrderMapper orderMapper;
-
 	@GetMapping
 	public ResponseEntity<List<OrderDTO>> getAllOrders() {
 		List<OrderDTO> ordersDTOList = ordersService.getAllOrders();
+		return ResponseEntity.ok(ordersDTOList);
+	}
+	
+	@GetMapping("/user/{id}")
+	public ResponseEntity<List<OrderDTO>> getAllOrdersByUser(@PathVariable Integer id) {
+		List<OrderDTO> ordersDTOList = ordersService.getAllOrdersByUserId(id);
 		return ResponseEntity.ok(ordersDTOList);
 	}
 

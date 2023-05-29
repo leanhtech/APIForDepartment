@@ -36,9 +36,9 @@ public class Category {
 	@Column(name = "status")
 	private String status;
 
-	@Column(name = "image")
+	@Column(name = "image_byte")
 	@Lob
-	private byte[] image;
+	private byte[] imageByte;
 
 	@Column(name = "note")
 	private String note;

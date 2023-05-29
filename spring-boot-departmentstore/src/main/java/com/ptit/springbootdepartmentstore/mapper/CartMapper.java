@@ -1,10 +1,8 @@
 package com.ptit.springbootdepartmentstore.mapper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ptit.springbootdepartmentstore.dto.CartDTO;
@@ -12,12 +10,11 @@ import com.ptit.springbootdepartmentstore.entity.Cart;
 import com.ptit.springbootdepartmentstore.entity.CartId;
 import com.ptit.springbootdepartmentstore.entity.Product;
 import com.ptit.springbootdepartmentstore.entity.User;
-import com.ptit.springbootdepartmentstore.repository.CartRepository;
 
 @Component
 public class CartMapper {
 
-    public CartDTO toDto(Cart cart) {
+    public CartDTO toDTO(Cart cart) {
         CartDTO cartDTO = new CartDTO();
         cartDTO.setUserId(cart.getId().getUser().getId());
         cartDTO.setProductId(cart.getId().getProduct().getId());
@@ -34,5 +31,11 @@ public class CartMapper {
         cart.setQuantity(cartDTO.getQuantity());
         return cart;
     }
+    
+    public List<CartDTO> toListDTO (List<Cart> carts) {
+    	return carts.stream()
+    			.map(this::toDTO)
+    			.collect(Collectors.toList());
+    } 
 
 }

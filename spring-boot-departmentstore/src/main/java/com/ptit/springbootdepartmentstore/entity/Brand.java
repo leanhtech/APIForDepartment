@@ -8,7 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +30,14 @@ public class Brand {
 	
 	@Column(name = "description")
 	private String descipttion;
+	
+	@Column(name = "image_byte")
+	@Lob
+	private byte[] imageByte;
+	
+	@OneToOne
+	@JoinColumn(name = "image_id")
+    private Image image;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)

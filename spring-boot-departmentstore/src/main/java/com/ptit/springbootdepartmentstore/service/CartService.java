@@ -1,6 +1,5 @@
 package com.ptit.springbootdepartmentstore.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +32,12 @@ public class CartService {
 
     public List<CartDTO> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
-        List<CartDTO> cartDTOList = new ArrayList<>();
-
-        for (Cart cart : carts) {
-            CartDTO cartDTO = cartMapper.toDto(cart);
-            cartDTOList.add(cartDTO);
-        }
-
-        return cartDTOList;
+        return cartMapper.toListDTO(carts);
+    }
+    
+    public List<CartDTO> getAllByIdUser(Integer id) {
+    	List<Cart> carts = cartRepository.findByIdUserId(id);
+    	return cartMapper.toListDTO(carts);
     }
 
     public CartDTO getCartByUserIdAndProductId(Integer userId, Integer productId) {
@@ -54,7 +51,7 @@ public class CartService {
             Cart cart = cartRepository.findById(cartId).orElse(null);
 
             if (cart != null) {
-                CartDTO cartDTO = cartMapper.toDto(cart);
+                CartDTO cartDTO = cartMapper.toDTO(cart);
                 return cartDTO;
             }
         }
@@ -75,7 +72,7 @@ public class CartService {
                 existingCartDTO.setQuantity(newQuantity);
                 Cart cart = cartMapper.toEntity(existingCartDTO, user, product);
                 Cart savedCart = cartRepository.save(cart);
-                CartDTO savedCartDTO = cartMapper.toDto(savedCart);
+                CartDTO savedCartDTO = cartMapper.toDTO(savedCart);
                 return savedCartDTO;
             } else {
                 CartDTO cartDTO = new CartDTO();
@@ -84,7 +81,7 @@ public class CartService {
                 cartDTO.setQuantity(quantity);
                 Cart cart = cartMapper.toEntity(cartDTO, user, product);
                 Cart savedCart = cartRepository.save(cart);
-                CartDTO savedCartDTO = cartMapper.toDto(savedCart);
+                CartDTO savedCartDTO = cartMapper.toDTO(savedCart);
                 return savedCartDTO;
             }
         }
@@ -103,7 +100,7 @@ public class CartService {
                 existingCartDTO.setQuantity(quantity);
                 Cart cart = cartMapper.toEntity(existingCartDTO, user, product);
                 Cart savedCart = cartRepository.save(cart);
-                return cartMapper.toDto(savedCart);
+                return cartMapper.toDTO(savedCart);
             }
         }
         return null;

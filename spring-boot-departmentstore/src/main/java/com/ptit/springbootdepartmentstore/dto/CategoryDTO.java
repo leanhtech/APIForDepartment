@@ -13,9 +13,7 @@ public class CategoryDTO {
 
 	private String name;
 
-	private String imageUrl;
-	
-	private byte[] image;
+	private String imageBase64;
 	
 	private String note;
 }

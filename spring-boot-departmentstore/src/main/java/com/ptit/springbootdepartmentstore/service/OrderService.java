@@ -41,6 +41,19 @@ public class OrderService {
 
 		return ordersDTOList;
 	}
+	
+	public List<OrderDTO> getAllOrdersByUserId(Integer userId) {
+		List<Orders> orders = orderRepository.findByUserId(userId);
+		
+		List<OrderDTO> ordersDTOList = new ArrayList<>();
+
+		for (Orders order : orders) {
+			OrderDTO ordersDTO = orderMapper.toDto(order);
+			ordersDTOList.add(ordersDTO);
+		}
+
+		return ordersDTOList;
+	}
 
 	public OrderDTO getOrderById(Integer id) {
 		Orders order = orderRepository.findById(id).orElse(null);

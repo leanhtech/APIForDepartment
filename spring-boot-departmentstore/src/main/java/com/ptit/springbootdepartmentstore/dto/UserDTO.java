@@ -22,7 +22,7 @@ public class UserDTO {
 
 	private String lastName;
 	
-	private byte[] avatar;
+	private Integer imageId;
 
 	private String email;
 
@@ -35,4 +35,6 @@ public class UserDTO {
 	private List<Integer> addressIds;
 
 	private Integer permissionId;
+	
+	private String imageBase64;
 }

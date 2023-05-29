@@ -1,5 +1,7 @@
 package com.ptit.springbootdepartmentstore.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,16 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Data;
 
 @Entity
 @Data
-
 public class Product {
 
 	@Id
@@ -51,8 +52,8 @@ public class Product {
     @Column(name = "quantity")
     private Integer quantity;
     
-    @Column(name = "image")
-    private String image;
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+	private List<Image> imageList;
     
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable = false)
@@ -62,6 +63,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="brand_id", nullable=false)
     private Brand brand;
+    
+    @Column(name = "image_byte")
+	@Lob
+	private byte[] imageByte;
 
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "product")

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 
@@ -56,7 +57,11 @@ public class User {
 	@JoinColumn(name = "permission_id", nullable = false)
 	private Permission permission;
 	
-	@Column(name = "avatar")
+	@OneToOne
+	@JoinColumn(name = "image_id")
+    private Image image;
+	
+	@Column(name = "image_byte")
 	@Lob
-    private byte[] avatar;
+	private byte[] imageByte;
 }

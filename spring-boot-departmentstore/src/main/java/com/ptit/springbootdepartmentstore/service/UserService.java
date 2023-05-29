@@ -36,6 +36,7 @@ public class UserService {
 	public UserDTO createUser(UserDTO userDTO) {
 		User user = userMapper.toEntity(userDTO);
 		User savedUser = userRepository.save(user);
+		System.out.println(savedUser.getId());
 		return userMapper.toDTO(savedUser);
 	}
 

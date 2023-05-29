@@ -1,14 +1,16 @@
 package com.ptit.springbootdepartmentstore.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class ProductDTO {
 
 	private Integer id;
@@ -31,9 +33,11 @@ public class ProductDTO {
 
 	private Integer quantity;
 	
-	private String image;
+	private List<Integer> imageIds;
 
-	private int brandId;
+	private Integer brandId;
 
-	private int categoryId;
+	private Integer categoryId;
+	
+	private String imageBase64;
 }
